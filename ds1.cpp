@@ -1,4 +1,4 @@
-#include <opencv2/highgui/highgui.hpp>
+﻿#include <opencv2/highgui/highgui.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <iostream>
@@ -28,7 +28,7 @@ int main(){
     for (int i=0; i<imagem.rows; i++){
         for (int j=0; j<imagem.cols; j++){
             pixelColor = &(imagemRuido.ptr<RGB>(i)[j]);
-            if(pixelColor->blue < 200 || pixelColor->red > 120 || pixelColor->green > 150){
+            if(pixelColor->red > 40 || pixelColor->green > pixelColor->blue || pixelColor->blue < 150){
                 pixelColor->green = 0;
                 pixelColor->red = 0;
                 pixelColor->blue = 0;
