@@ -2,6 +2,8 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <iostream>
+#include <stdio.h>
+#include <time.h>
 
 using namespace std;
 
@@ -14,6 +16,9 @@ typedef struct RGB{
 cv::Mat imagem, imagemRuido, imagemVerde;
 
 int main(){
+    clock_t tempo;
+	tempo = clock();
+
     imagem = cv::imread("teste1.jpg", CV_LOAD_IMAGE_COLOR);
     
     if (!imagem.data){
@@ -28,7 +33,8 @@ int main(){
     for (int i=0; i<imagem.rows; i++){
         for (int j=0; j<imagem.cols; j++){
             pixelColor = &(imagemRuido.ptr<RGB>(i)[j]);
-            if(pixelColor->red > 40 || pixelColor->green > pixelColor->blue || pixelColor->blue < 150){
+            if(pixelColor->red > (pixelColor->blue/100)*45 || pixelColor->green > pixelColor->blue || pixelColor->blue < 150){
+            //if(pixelColor->blue < 200 || pixelColor->red > 120 || pixelColor->green > 150){
                 pixelColor->green = 0;
                 pixelColor->red = 0;
                 pixelColor->blue = 0;
@@ -40,11 +46,13 @@ int main(){
         }
     }
 
-    cv::namedWindow("teste", CV_WINDOW_AUTOSIZE);
-    cv::imshow("teste", imagemRuido);
+    //cv::namedWindow("teste", CV_WINDOW_AUTOSIZE);
+    //cv::imshow("teste", imagemRuido);
     //cv::imwrite("save.jpg", imagemRuido);
-    cv::imshow("janela", imagem);
-    cv::waitKey(0);
+    //cv::imshow("janela", imagem);
+    //cv::waitKey(0);
 
+	printf("Tempo:%f",(clock() - tempo) / (double)CLOCKS_PER_SEC);
+    
     return 0;
 }

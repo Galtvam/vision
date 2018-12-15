@@ -5,7 +5,7 @@
 
 int main(){
     cv::Mat imagemOriginal;
-    imagemOriginal = cv::imread("teste.jpg", CV_LOAD_IMAGE_COLOR);
+    imagemOriginal = cv::imread("teste1.jpg", CV_LOAD_IMAGE_COLOR);
 
     if (!imagemOriginal.data){
         std::cout << "falha ao carregar a imagem" << std::endl;

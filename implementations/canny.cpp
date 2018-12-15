@@ -28,7 +28,7 @@ void CannyThreshold(int, void*){
 
 int main(){
     // carregamento da imagem
-    imagem = cv::imread("teste.jpg", CV_LOAD_IMAGE_COLOR);
+    imagem = cv::imread("teste1.jpg", CV_LOAD_IMAGE_COLOR);
     // bloco de validação do load
     if (!imagem.data){
         std::cout << "Falha ao carregar a imagem" << std::endl;
