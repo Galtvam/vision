@@ -1,58 +1,36 @@
-﻿#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/highgui/highgui.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+
 #include <iostream>
-#include <stdio.h>
-#include <time.h>
 
 using namespace std;
 
-typedef struct RGB{
-    uchar blue;
-    uchar green;
-    uchar red;
-} RGB;
-
-cv::Mat imagem, imagemRuido, imagemVerde;
+cv::Mat imagem, imagemRuido, imagemFinal;
 
 int main(){
-    clock_t tempo;
-	tempo = clock();
-
+    // Carregamento da imagem
     imagem = cv::imread("teste1.jpg", CV_LOAD_IMAGE_COLOR);
-    
+    // Checagem de erro na leitura
     if (!imagem.data){
-        cout << "Erro leitura" << endl;
-        return -1;
+       cout << "Erro leitura" << endl;
+       return -1;
     }
     
-    // redução de ruido
-    cv::GaussianBlur(imagem, imagemRuido, cv::Size(5,5), 0,0);
+    // Conversão BGR to YUV
+    cv::cvtColor(imagem, imagem, CV_BGR2YUV);
 
-    RGB *pixelColor;
-    for (int i=0; i<imagem.rows; i++){
-        for (int j=0; j<imagem.cols; j++){
-            pixelColor = &(imagemRuido.ptr<RGB>(i)[j]);
-            if(pixelColor->red > (pixelColor->blue/100)*45 || pixelColor->green > pixelColor->blue || pixelColor->blue < 150){
-            //if(pixelColor->blue < 200 || pixelColor->red > 120 || pixelColor->green > 150){
-                pixelColor->green = 0;
-                pixelColor->red = 0;
-                pixelColor->blue = 0;
-            }else{
-                pixelColor->green = 255;
-                pixelColor->red = 255;
-                pixelColor->blue = 255;
-            }
-        }
-    }
+    // Redução de ruido
+    cv::GaussianBlur(imagem, imagemRuido, cv::Size(3,3), 0,0);
 
-    //cv::namedWindow("teste", CV_WINDOW_AUTOSIZE);
-    //cv::imshow("teste", imagemRuido);
-    //cv::imwrite("save.jpg", imagemRuido);
-    //cv::imshow("janela", imagem);
-    //cv::waitKey(0);
+    // Segmentação da cor Azul no formato YUV
+    cv::inRange(imagemRuido, cv::Scalar(0,20,0), cv::Scalar(170,255,100), imagemFinal);   
 
-	printf("Tempo:%f",(clock() - tempo) / (double)CLOCKS_PER_SEC);
+    // Exibição
+    cv::namedWindow("Segmentação", CV_WINDOW_AUTOSIZE);
+    cv::imshow("Segmentação", imagemFinal);
+    cv::imshow("Original", imagem);
+    cv::waitKey(0);
     
     return 0;
 }
